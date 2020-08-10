@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:rxdart/subjects.dart';
@@ -17,15 +18,15 @@ class FlutterCompass {
   static const EventChannel _compassChannel =
       const EventChannel('hemanthraj/flutter_compass');
 
-  BehaviorSubject<double> _compassEvents;
+  BehaviorSubject<Float64List> _compassEvents;
 
   /// Provides a [Stream] of compass events that can be listened to.
-  static Stream<double> get events {
+  static Stream<Float64List> get events {
     if (_instance._compassEvents == null) {
-      _instance._compassEvents = BehaviorSubject<double>();
+      _instance._compassEvents = BehaviorSubject<Float64List>();
       _instance._compassEvents.addStream(_compassChannel
           .receiveBroadcastStream()
-          .map<double>((dynamic data) => data));
+          .map<Float64List>((dynamic data) => data));
     }
 
     return _instance._compassEvents;
