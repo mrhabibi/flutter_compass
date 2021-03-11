@@ -32,12 +32,20 @@ public class SwiftFlutterCompassPlugin: NSObject, FlutterPlugin, FlutterStreamHa
         location.stopUpdatingHeading();
         return nil;
     }
+    
+    func dataFrom<T>(fromArray values: [T]) -> Data {
+        var values = values
+        return Data(buffer: UnsafeBufferPointer(start: &values, count: values.count))
+    }
+
 
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         if(newHeading.headingAccuracy>0){
             let heading:CLLocationDirection!;
             heading = newHeading.magneticHeading;
-            eventSink?([heading, newHeading.headingAccuracy]);
+            let msg: [Double] = [heading, newHeading.headingAccuracy]
+            let data = dataFrom(fromArray: msg)
+            eventSink?(FlutterStandardTypedData(float64: data));
         }
     }
 }
